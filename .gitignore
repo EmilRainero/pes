@@ -1,0 +1,11 @@
+.dropbox/
+.metadata/
+.metadata/.plugins/org.eclipse.rse.core/initializerMarks/org.eclipse.rse.internal.core.RSELocalConnectionInitializer.mark
+._README.md
+.metadata/.mylyn/repositories.xml.zip
+._*
+*_bak_*
+Icon
+*.project
+.dropbox
+*.DS_Store

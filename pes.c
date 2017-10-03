@@ -457,6 +457,18 @@ void pes_timer_1s()
 	//bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 10);
 }
 
-// testing
+/*
+ *
+ * 3D8E service – sensors
+                2AE0 – temperature (16 bit unsigned)
+                                temperature_history
+record and return time series readings
+                2BCD – humidity (16 bit unsigned)
+set time – zero time
+record info – every 5 seconds – shift it
+
+blink characteristic
+ *
+ */
 
 
