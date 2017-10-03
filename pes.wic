@@ -94,7 +94,7 @@
             <Description>Temperature</Description>
             <DataType/>
             <Size>2</Size>
-            <InitialValue>00012</InitialValue>
+            <InitialValue>0</InitialValue>
             <Properties>
                 <Read>true</Read>
                 <Notify>true</Notify>
@@ -116,7 +116,41 @@
             <PresentationFormat>
                 <Format>sint16</Format>
                 <Exponent>0</Exponent>
-                <Unit>degree Celsius</Unit>
+                <Unit>unitless</Unit>
+                <Description>first</Description>
+                <InitialValue/>
+                <Namespace>bluetooth</Namespace>
+            </PresentationFormat>
+        </Characteristic>
+        <Characteristic mandatory="false" predefined="false">
+            <Name>Humidity</Name>
+            <Uuid>2BCD</Uuid>
+            <Description>Humidity</Description>
+            <DataType/>
+            <Size>2</Size>
+            <InitialValue>0</InitialValue>
+            <Properties>
+                <Read>true</Read>
+                <Notify>true</Notify>
+                <Indicate>true</Indicate>
+            </Properties>
+            <Permissions>
+                <VariableLength>false</VariableLength>
+                <Read>true</Read>
+                <Write>false</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <AuthenticatedRead>false</AuthenticatedRead>
+                <ReliableWrite>false</ReliableWrite>
+                <AuthenticatedWrite>false</AuthenticatedWrite>
+            </Permissions>
+            <ClientConfiguration>
+                <Notification>true</Notification>
+                <Indication>true</Indication>
+            </ClientConfiguration>
+            <PresentationFormat>
+                <Format>sint16</Format>
+                <Exponent>0</Exponent>
+                <Unit>unitless</Unit>
                 <Description>first</Description>
                 <InitialValue/>
                 <Namespace>bluetooth</Namespace>

@@ -19,6 +19,7 @@
 #define UUID_SERVICE_GATT                                     0x1801
 #define __UUID_SENSOR_SERVICE                                 0x3D8E
 #define __UUID_SENSOR_SERVICE_TEMPERATURE                     0x2A6E
+#define __UUID_SENSOR_SERVICE_HUMIDITY                        0x2BCD
 #define UUID_SERVICE_BATTERY                                  0x180F
 #define UUID_CHARACTERISTIC_BATTERY_LEVEL                     0x2A19
 
@@ -43,6 +44,13 @@
 #define HDLD_SENSOR_SERVICE_TEMPERATURE_CLIENT_CONFIGURATION  0x0103
 // ===== Descriptor 'Presentation Format'
 #define HDLD_SENSOR_SERVICE_TEMPERATURE_PRESENTATION_FORMAT_0 0x0104
+// ----- Characteristic 'Humidity'
+#define HDLC_SENSOR_SERVICE_HUMIDITY                          0x0105
+#define HDLC_SENSOR_SERVICE_HUMIDITY_VALUE                    0x0106
+// ===== Descriptor 'Client Configuration'
+#define HDLD_SENSOR_SERVICE_HUMIDITY_CLIENT_CONFIGURATION     0x0107
+// ===== Descriptor 'Presentation Format'
+#define HDLD_SENSOR_SERVICE_HUMIDITY_PRESENTATION_FORMAT_0    0x0108
 
 // ***** Primary Service 'Battery Service'
 #define HDLS_BATTERY_SERVICE                                  0x0200
@@ -59,6 +67,9 @@ typedef PACKED struct
 
     // Current value of the client configuration descriptor for characteristic 'Temperature'
     UINT16 sensor_service_temperature_client_configuration;
+
+    // Current value of the client configuration descriptor for characteristic 'Humidity'
+    UINT16 sensor_service_humidity_client_configuration;
 }  __HOSTINFO;
 #pragma pack()
 
@@ -106,6 +117,9 @@ extern BOOL store_in_db_generic_access_appearance(UINT8* p_value, UINT8 value_le
 
 // It should be called when 'Temperature' is changed
 extern BOOL store_in_db_sensor_service_temperature(UINT8* p_value, UINT8 value_len, BOOL write, BOOL notify);
+
+// It should be called when 'Humidity' is changed
+extern BOOL store_in_db_sensor_service_humidity(UINT8* p_value, UINT8 value_len, BOOL write, BOOL notify);
 
 // It should be called when 'Battery Level' is changed
 extern BOOL store_in_db_battery_service_battery_level(UINT8* p_value, UINT8 value_len);

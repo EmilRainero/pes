@@ -4,8 +4,4 @@
 
 APP_SRC = pes.c
 APP_SRC += pes_db.c
-APP_SRC += ../wiced_sense/drivers/hts221_driver.c
-
-INCS += $(DIR)/../wiced_sense/drivers
-
 

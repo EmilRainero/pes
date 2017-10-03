@@ -13,11 +13,11 @@
 #include "platform.h"
 
 // Include sensor headers
-#include "hts221_driver.h"
-#include "l3gd20_driver.h"
-#include "lis3dsh_driver.h"
-#include "lps25h_driver.h"
-#include "lsm303d_driver.h"
+//#include "hts221_driver.h"
+//#include "l3gd20_driver.h"
+//#include "lis3dsh_driver.h"
+//#include "lps25h_driver.h"
+//#include "lsm303d_driver.h"
 
 #include "pes_db.h"
 
@@ -238,7 +238,7 @@ void pes_create(void)
 
     /* add adc <meehan@parc.com> */
     adc_config();
-    //bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 5);
+//    bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 5);
 }
 
 // Connection up callback function is called on every connection establishment
@@ -396,84 +396,67 @@ UINT16 application_read_adc_voltage_from_gpio(UINT8 gpio_number){
 	return adc_readVoltage(adc_convertGPIOtoADCInput(gpio_number));
 }
 
-status_t wiced_sense_get_humidity_temp_instantaneous_data(UINT16* humidity, INT16* temperature)
-{
-	if(HTS221_StartOneShotMeasurement() == HTS221_OK)
-	{
-		if(HTS221_Get_Measurement(humidity, temperature) == HTS221_OK)
-			return MEMS_SUCCESS;
-	}
+//status_t wiced_sense_get_humidity_temp_instantaneous_data(UINT16* humidity, INT16* temperature)
+//{
+//	if(HTS221_StartOneShotMeasurement() == HTS221_OK)
+//	{
+//		if(HTS221_Get_Measurement(humidity, temperature) == HTS221_OK)
+//			return MEMS_SUCCESS;
+//	}
+//
+//	return MEMS_ERROR;
+//}
 
-	return MEMS_ERROR;
-}
+INT16 fakeTemperature = 0;
+INT16 fakeHumidity = 0;
 
-int counter = 0;
-
-void wiced_sense_initialize_hts221(void)
-{
-	if(HTS221_Activate() == HTS221_OK)
-		ble_trace0("HTS221_Activate Successful");
-	else
-		ble_trace0("HTS221_Activate Failed.");
-
-	if(HTS221_Set_Odr(HTS221_ODR_7HZ) == HTS221_OK)
-		ble_trace0("HTS221_Set_Odr Successful");
-	else
-		ble_trace0("HTS221_Set_Odr Failed.");
-
-	if(HTS221_Set_AvgHT(HTS221_AVGH_8, HTS221_AVGT_4) == HTS221_OK)
-		ble_trace0("HTS221_Set_AvgHT Successful");
-	else
-		ble_trace0("HTS221_Set_AvgHT failed");
-
-	if(HTS221_Set_BduMode(1) == HTS221_OK)
-		ble_trace0("HTS221_Set_BduMode Successful");
-	else
-		ble_trace0("HTS221_Set_BduMode failed");
-}
+//void wiced_sense_initialize_hts221(void)
+//{
+//	if(HTS221_Activate() == HTS221_OK)
+//		ble_trace0("HTS221_Activate Successful");
+//	else
+//		ble_trace0("HTS221_Activate Failed.");
+//
+//	if(HTS221_Set_Odr(HTS221_ODR_7HZ) == HTS221_OK)
+//		ble_trace0("HTS221_Set_Odr Successful");
+//	else
+//		ble_trace0("HTS221_Set_Odr Failed.");
+//
+//	if(HTS221_Set_AvgHT(HTS221_AVGH_8, HTS221_AVGT_4) == HTS221_OK)
+//		ble_trace0("HTS221_Set_AvgHT Successful");
+//	else
+//		ble_trace0("HTS221_Set_AvgHT failed");
+//
+//	if(HTS221_Set_BduMode(1) == HTS221_OK)
+//		ble_trace0("HTS221_Set_BduMode Successful");
+//	else
+//		ble_trace0("HTS221_Set_BduMode failed");
+//}
 
 // It will be called every 1 sec
 void pes_timer_1s()
 {
-	UINT16 humidity = 0;
-	INT16 temperature = 0;
 
-	status_t status = wiced_sense_get_humidity_temp_instantaneous_data(&humidity, &temperature);
 	ble_trace0("pes_timer_1s()");
-
 
     //Todo: do you actions here every 1 second
 	UINT16 value = application_read_adc_voltage_from_gpio(33);
 	ble_trace1("  voltage %04x", value);
 
-	counter++;
-	if (counter == 1)
-	{
-		wiced_sense_initialize_hts221();
-		return;
-	}
-	value = (UINT16) counter;
+	fakeTemperature++;
+	fakeHumidity++;
+
+	value = (UINT16) fakeTemperature;
 
 	//value = (UINT16)(status == MEMS_SUCCESS) ? 3 : 4;
 	//store_in_db_sensor_service_temperature(application_read_adc_voltage_from_gpio(33), 2, TRUE, TRUE);
-	store_in_db_sensor_service_temperature((UINT8 *)&value, 2, TRUE, TRUE);
-	//store_in_db_sensor_service_temperature(blah, 2, TRUE, TRUE);
+	store_in_db_sensor_service_temperature((UINT8 *)&fakeTemperature, 2, TRUE, TRUE);
+
+	store_in_db_sensor_service_humidity((UINT8 *)&fakeHumidity, 2, TRUE, TRUE);
+
 	//bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 10);
 }
 
 // testing
 
 
-// Emil
-/**
-* \brief Perform LED blinking
-* \ingroup bleprofile
-*
-* \details This function blinks LED that is defined in BLE_PROFILE_GPIO_CFG.
-*
-* \param on_ms LED on time (multiple of 12.5ms, MIN: 25ms, MAX: 1sec).
-* \param off_ms LED off time (multiple of 12.5ms, MIN: 25ms, MAX: 1sec).
-* \param num : number of times to blink.
-*
-*/
-//void bleprofile_LEDBlink(UINT16 on_ms, UINT16 off_ms, UINT8 num);
