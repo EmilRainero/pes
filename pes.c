@@ -461,7 +461,7 @@ void pes_timer_1s()
 	//bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 10);
 }
 
-// test
+// testing
 
 
 // Emil
