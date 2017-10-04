@@ -4,13 +4,14 @@
  * Device configuration and functions required for the BLE device.
  *
  */
-
+//#include <stdbool.h>
 #include "bleprofile.h"
 #include "bleapp.h"
 #include "gpiodriver.h"
 #include "string.h"
 #include "stdio.h"
 #include "platform.h"
+
 
 // Include sensor headers
 //#include "hts221_driver.h"
@@ -28,7 +29,7 @@
  *                     Constants
  ******************************************************/
 
-#define pes_FINE_TIMER           0
+#define pes_FINE_TIMER           10
 #define pes_DEVICE_NAME          "pes"
 #define pes_DEVICE_APPEARENCE    0
 #define pes_MAIN_SERVICE_UUID    __UUID_SENSOR_SERVICE
@@ -154,6 +155,39 @@ APPLICATION_INIT()
                    pes_create);
 }
 
+#define LED_PIN 28
+
+ulong currentTimeMS = 0;
+ulong ledTimerMS = 0;
+
+extern void set_led(BOOL value, ulong durationMS);
+
+void set_led(BOOL value, ulong durationMS)
+{
+	gpio_setPinOutput(LED_PIN / 16, LED_PIN % 16, value ? 0 : 255);
+	if (value == TRUE)
+	{
+		if (durationMS > 0)
+		{
+			ledTimerMS = currentTimeMS + durationMS;
+		}
+	}
+}
+
+ulong currentTimeMSTicks = 0;
+
+void pes_timer_ms()
+{
+	currentTimeMSTicks++;
+	currentTimeMS += (currentTimeMSTicks % 2 == 1) ? 13 : 12;
+	if (currentTimeMS > ledTimerMS)
+	{
+		set_led(FALSE, 0);
+	}
+}
+
+
+
 // Create device
 void pes_create(void)
 {
@@ -171,6 +205,9 @@ void pes_create(void)
 
     bleprofile_Init(bleprofile_p_cfg);
     bleprofile_GPIOInit(bleprofile_gpio_p_cfg);
+
+    gpio_configurePin(LED_PIN / 16, LED_PIN % 16, GPIO_OUTPUT_ENABLE, 0);
+    set_led(FALSE, 0); // off
 
     // Initialized ROM code which will monitor the battery
     blebat_Init();
@@ -256,6 +293,7 @@ void pes_connection_up(void)
                 (pes_remote_addr[1] << 8) + pes_remote_addr[0],
                 pes_connection_handle);
 
+    set_led(TRUE, 2000);
 
     // Prepare generated code for connection - write persistent values from __HOSTINFO to GATT DB
     __on_connection_up();
@@ -407,6 +445,8 @@ UINT16 application_read_adc_voltage_from_gpio(UINT8 gpio_number){
 //	return MEMS_ERROR;
 //}
 
+UINT32 currentTime = 0;
+
 INT16 fakeTemperature = 0;
 INT16 fakeHumidity = 0;
 
@@ -433,6 +473,7 @@ INT16 fakeHumidity = 0;
 //		ble_trace0("HTS221_Set_BduMode failed");
 //}
 
+
 // It will be called every 1 sec
 void pes_timer_1s()
 {
@@ -441,7 +482,24 @@ void pes_timer_1s()
 
     //Todo: do you actions here every 1 second
 	UINT16 value = application_read_adc_voltage_from_gpio(33);
-	ble_trace1("  voltage %04x", value);
+	//ble_trace1("  voltage %04x", value);
+
+	if (currentTime == 0)
+	{
+//		wiced_rtos_init_timer();
+	}
+	currentTime++;
+
+	if (currentTime % 10 == 0)
+	{
+		//(true); // on
+//		gpio_setPinOutput((28) / 16, (28) % 16, (BYTE) 0);
+//		bleprofile_LEDOn();
+	} else {
+//		(false, 0.0); // off
+//		gpio_setPinOutput((28) / 16, (28) % 16, (BYTE) 255);
+//		bleprofile_LEDOff();
+	}
 
 	fakeTemperature++;
 	fakeHumidity++;
@@ -450,25 +508,88 @@ void pes_timer_1s()
 
 	//value = (UINT16)(status == MEMS_SUCCESS) ? 3 : 4;
 	//store_in_db_sensor_service_temperature(application_read_adc_voltage_from_gpio(33), 2, TRUE, TRUE);
-	store_in_db_sensor_service_temperature((UINT8 *)&fakeTemperature, 2, TRUE, TRUE);
 
-	store_in_db_sensor_service_humidity((UINT8 *)&fakeHumidity, 2, TRUE, TRUE);
+//	store_in_db_sensor_service_temperature((UINT8 *)&fakeTemperature, 2, TRUE, TRUE);
+//	store_in_db_sensor_service_humidity((UINT8 *)&fakeHumidity, 2, TRUE, TRUE);
+
+	store_in_db_sensor_service_time((UINT8 *)&currentTime, 4, TRUE, TRUE);
 
 	//bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 10);
 }
 
 /*
  *
- * 3D8E service – sensors
-                2AE0 – temperature (16 bit unsigned)
-                                temperature_history
+ * 3D8E service ï¿½ sensors
+                2AE0 ï¿½ temperature (16 bit unsigned)
+                 2AE1               temperature_history
 record and return time series readings
-                2BCD – humidity (16 bit unsigned)
-set time – zero time
-record info – every 5 seconds – shift it
+                2BCD ï¿½ humidity (16 bit unsigned)
+                2BCE - humidity history
+set time
+   3000 - set current time - uint32 - seconds since 1970 = unix epoch time
+
+record info ï¿½ every 5 seconds ï¿½ shift it
+    3001 - set record info
 
 blink characteristic
+    3010
+
  *
  */
 
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_set_recording_info(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+	ble_trace0("on_write_sensor_service_set_recording_info()");
+    return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_temperature_history(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+	ble_trace0("on_write_sensor_service_temperature_history()");
+	return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_humidity_history(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+	ble_trace0("on_write_sensor_service_humidity_history()");
+    return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_time(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+	ble_trace0("on_write_sensor_service_time()");
+	currentTime = *((uint32 *) attrPtr);
+	return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_recording_info(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+	ble_trace0("on_write_sensor_service_recording_info()");
+    return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_blink(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+	set_led(TRUE, 500);
+    return FALSE;
+}
 

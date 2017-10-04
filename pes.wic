@@ -98,7 +98,7 @@
             <Properties>
                 <Read>true</Read>
                 <Notify>true</Notify>
-                <Indicate>true</Indicate>
+                <Indicate>false</Indicate>
             </Properties>
             <Permissions>
                 <VariableLength>false</VariableLength>
@@ -111,7 +111,7 @@
             </Permissions>
             <ClientConfiguration>
                 <Notification>true</Notification>
-                <Indication>true</Indication>
+                <Indication>false</Indication>
             </ClientConfiguration>
             <PresentationFormat>
                 <Format>sint16</Format>
@@ -132,7 +132,7 @@
             <Properties>
                 <Read>true</Read>
                 <Notify>true</Notify>
-                <Indicate>true</Indicate>
+                <Indicate>false</Indicate>
             </Properties>
             <Permissions>
                 <VariableLength>false</VariableLength>
@@ -145,10 +145,190 @@
             </Permissions>
             <ClientConfiguration>
                 <Notification>true</Notification>
-                <Indication>true</Indication>
+                <Indication>false</Indication>
             </ClientConfiguration>
             <PresentationFormat>
                 <Format>sint16</Format>
+                <Exponent>0</Exponent>
+                <Unit>unitless</Unit>
+                <Description>first</Description>
+                <InitialValue/>
+                <Namespace>bluetooth</Namespace>
+            </PresentationFormat>
+        </Characteristic>
+        <Characteristic mandatory="false" predefined="false">
+            <Name>Temperature History</Name>
+            <Uuid>2AE1</Uuid>
+            <Description>Temperature History</Description>
+            <DataType/>
+            <Size>2</Size>
+            <InitialValue/>
+            <Properties>
+                <Read>true</Read>
+                <Notify>false</Notify>
+                <Indicate>false</Indicate>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <SignedWrite>false</SignedWrite>
+                <ReliableWrite>false</ReliableWrite>
+                <WritableAuxiliaries>false</WritableAuxiliaries>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <Permissions>
+                <VariableLength>false</VariableLength>
+                <Read>true</Read>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <AuthenticatedRead>false</AuthenticatedRead>
+                <ReliableWrite>false</ReliableWrite>
+                <AuthenticatedWrite>false</AuthenticatedWrite>
+            </Permissions>
+            <PresentationFormat>
+                <Format>uint16</Format>
+                <Exponent>0</Exponent>
+                <Unit>unitless</Unit>
+                <Description>first</Description>
+                <InitialValue/>
+                <Namespace>bluetooth</Namespace>
+            </PresentationFormat>
+        </Characteristic>
+        <Characteristic mandatory="false" predefined="false">
+            <Name>Humidity History</Name>
+            <Uuid>2BCE</Uuid>
+            <Description>Humidity History</Description>
+            <DataType/>
+            <Size>2</Size>
+            <InitialValue>0</InitialValue>
+            <Properties>
+                <Read>true</Read>
+                <Notify>false</Notify>
+                <Indicate>false</Indicate>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <SignedWrite>false</SignedWrite>
+                <ReliableWrite>false</ReliableWrite>
+                <WritableAuxiliaries>false</WritableAuxiliaries>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <Permissions>
+                <VariableLength>false</VariableLength>
+                <Read>true</Read>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <AuthenticatedRead>false</AuthenticatedRead>
+                <ReliableWrite>false</ReliableWrite>
+                <AuthenticatedWrite>false</AuthenticatedWrite>
+            </Permissions>
+            <PresentationFormat>
+                <Format>uint16</Format>
+                <Exponent>0</Exponent>
+                <Unit>unitless</Unit>
+                <Description>first</Description>
+                <InitialValue/>
+                <Namespace>bluetooth</Namespace>
+            </PresentationFormat>
+        </Characteristic>
+        <Characteristic mandatory="false" predefined="false">
+            <Name>Time</Name>
+            <Uuid>3000</Uuid>
+            <Description>Time</Description>
+            <DataType/>
+            <Size>4</Size>
+            <InitialValue>0</InitialValue>
+            <Properties>
+                <Read>true</Read>
+                <Notify>true</Notify>
+                <Indicate>false</Indicate>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <SignedWrite>false</SignedWrite>
+                <ReliableWrite>false</ReliableWrite>
+                <WritableAuxiliaries>false</WritableAuxiliaries>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <Permissions>
+                <VariableLength>false</VariableLength>
+                <Read>true</Read>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <AuthenticatedRead>false</AuthenticatedRead>
+                <ReliableWrite>false</ReliableWrite>
+                <AuthenticatedWrite>false</AuthenticatedWrite>
+            </Permissions>
+            <PresentationFormat>
+                <Format>uint32</Format>
+                <Exponent>0</Exponent>
+                <Unit>unitless</Unit>
+                <Description>first</Description>
+                <InitialValue/>
+                <Namespace>bluetooth</Namespace>
+            </PresentationFormat>
+        </Characteristic>
+        <Characteristic mandatory="false" predefined="false">
+            <Name>Recording Info</Name>
+            <Uuid>3001</Uuid>
+            <Description>Recording Info</Description>
+            <DataType/>
+            <Size>2</Size>
+            <InitialValue>0</InitialValue>
+            <Properties>
+                <Read>true</Read>
+                <Notify>false</Notify>
+                <Indicate>false</Indicate>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <SignedWrite>false</SignedWrite>
+                <ReliableWrite>false</ReliableWrite>
+                <WritableAuxiliaries>false</WritableAuxiliaries>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <Permissions>
+                <VariableLength>false</VariableLength>
+                <Read>true</Read>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <AuthenticatedRead>false</AuthenticatedRead>
+                <ReliableWrite>false</ReliableWrite>
+                <AuthenticatedWrite>false</AuthenticatedWrite>
+            </Permissions>
+            <PresentationFormat>
+                <Format>uint16</Format>
+                <Exponent>0</Exponent>
+                <Unit>unitless</Unit>
+                <Description>first</Description>
+                <InitialValue/>
+                <Namespace>bluetooth</Namespace>
+            </PresentationFormat>
+        </Characteristic>
+        <Characteristic mandatory="false" predefined="false">
+            <Name>Blink</Name>
+            <Uuid>3002</Uuid>
+            <Description>Blink</Description>
+            <DataType/>
+            <Size>2</Size>
+            <InitialValue>0</InitialValue>
+            <Properties>
+                <Read>true</Read>
+                <Notify>false</Notify>
+                <Indicate>false</Indicate>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <SignedWrite>false</SignedWrite>
+                <ReliableWrite>false</ReliableWrite>
+                <WritableAuxiliaries>false</WritableAuxiliaries>
+                <Broadcast>false</Broadcast>
+            </Properties>
+            <Permissions>
+                <VariableLength>false</VariableLength>
+                <Read>true</Read>
+                <Write>true</Write>
+                <WriteWithoutResponse>false</WriteWithoutResponse>
+                <AuthenticatedRead>false</AuthenticatedRead>
+                <ReliableWrite>false</ReliableWrite>
+                <AuthenticatedWrite>false</AuthenticatedWrite>
+            </Permissions>
+            <PresentationFormat>
+                <Format>uint16</Format>
                 <Exponent>0</Exponent>
                 <Unit>unitless</Unit>
                 <Description>first</Description>

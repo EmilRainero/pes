@@ -61,16 +61,16 @@ const UINT8 gatt_database[] = // Define GATT database
         // <Name>Temperature</Name>
         // <Uuid>2A6E</Uuid>
         CHARACTERISTIC_UUID16 (HDLC_SENSOR_SERVICE_TEMPERATURE, HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE,
-            __UUID_SENSOR_SERVICE_TEMPERATURE, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_NOTIFY | LEGATTDB_CHAR_PROP_INDICATE,
+            __UUID_SENSOR_SERVICE_TEMPERATURE, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_NOTIFY,
             LEGATTDB_PERM_READABLE, 2),
             '0',0x00,
 
             /* Descriptor 'Client Characteristic Configuration' */
             // <Notification>true</Notification>
-            // <Indication>true</Indication>
+            // <Indication>false</Indication>
             CHAR_DESCRIPTOR_UUID16_WRITABLE (HDLD_SENSOR_SERVICE_TEMPERATURE_CLIENT_CONFIGURATION,
                 UUID_DESCRIPTOR_CLIENT_CHARACTERISTIC_CONFIGURATION, LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ | LEGATTDB_PERM_AUTH_WRITABLE, 2),
-                BIT16_TO_8(CCC_NOTIFICATION | CCC_INDICATION),
+                BIT16_TO_8(CCC_NOTIFICATION),
 
             /* Descriptor 'Characteristic Presentation Format' */
             // <PresentationFormat>
@@ -87,16 +87,16 @@ const UINT8 gatt_database[] = // Define GATT database
         // <Name>Humidity</Name>
         // <Uuid>2BCD</Uuid>
         CHARACTERISTIC_UUID16 (HDLC_SENSOR_SERVICE_HUMIDITY, HDLC_SENSOR_SERVICE_HUMIDITY_VALUE,
-            __UUID_SENSOR_SERVICE_HUMIDITY, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_NOTIFY | LEGATTDB_CHAR_PROP_INDICATE,
+            __UUID_SENSOR_SERVICE_HUMIDITY, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_NOTIFY,
             LEGATTDB_PERM_READABLE, 2),
             '0',0x00,
 
             /* Descriptor 'Client Characteristic Configuration' */
             // <Notification>true</Notification>
-            // <Indication>true</Indication>
+            // <Indication>false</Indication>
             CHAR_DESCRIPTOR_UUID16_WRITABLE (HDLD_SENSOR_SERVICE_HUMIDITY_CLIENT_CONFIGURATION,
                 UUID_DESCRIPTOR_CLIENT_CHARACTERISTIC_CONFIGURATION, LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ | LEGATTDB_PERM_AUTH_WRITABLE, 2),
-                BIT16_TO_8(CCC_NOTIFICATION | CCC_INDICATION),
+                BIT16_TO_8(CCC_NOTIFICATION),
 
             /* Descriptor 'Characteristic Presentation Format' */
             // <PresentationFormat>
@@ -108,6 +108,108 @@ const UINT8 gatt_database[] = // Define GATT database
             CHAR_DESCRIPTOR_UUID16 (HDLD_SENSOR_SERVICE_HUMIDITY_PRESENTATION_FORMAT_0,
                 UUID_DESCRIPTOR_CHARACTERISTIC_PRESENTATION_FORMAT, LEGATTDB_PERM_READABLE, 7),
                 0x0E, 0, BIT16_TO_8(0x2700), 0x01, BIT16_TO_8(0x0001),
+
+        /* Characteristic 'Temperature History' */
+        // <Name>Temperature History</Name>
+        // <Uuid>2AE1</Uuid>
+        CHARACTERISTIC_UUID16_WRITABLE (HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY, HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY_VALUE,
+            __UUID_SENSOR_SERVICE_TEMPERATURE_HISTORY, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_WRITE,
+            LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ, 2),
+            0x00,0x00,
+
+            /* Descriptor 'Characteristic Presentation Format' */
+            // <PresentationFormat>
+            // <Format>0x06</Format>
+            // <Exponent>0</Exponent>
+            // <Unit>0x2700</Unit>
+            // <NameSpace>0x01</NameSpace>
+            // <Description>0x0001</Description>
+            CHAR_DESCRIPTOR_UUID16 (HDLD_SENSOR_SERVICE_TEMPERATURE_HISTORY_PRESENTATION_FORMAT_0,
+                UUID_DESCRIPTOR_CHARACTERISTIC_PRESENTATION_FORMAT, LEGATTDB_PERM_READABLE, 7),
+                0x06, 0, BIT16_TO_8(0x2700), 0x01, BIT16_TO_8(0x0001),
+
+        /* Characteristic 'Humidity History' */
+        // <Name>Humidity History</Name>
+        // <Uuid>2BCE</Uuid>
+        CHARACTERISTIC_UUID16_WRITABLE (HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY, HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY_VALUE,
+            __UUID_SENSOR_SERVICE_HUMIDITY_HISTORY, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_WRITE,
+            LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ, 2),
+            '0',0x00,
+
+            /* Descriptor 'Characteristic Presentation Format' */
+            // <PresentationFormat>
+            // <Format>0x06</Format>
+            // <Exponent>0</Exponent>
+            // <Unit>0x2700</Unit>
+            // <NameSpace>0x01</NameSpace>
+            // <Description>0x0001</Description>
+            CHAR_DESCRIPTOR_UUID16 (HDLD_SENSOR_SERVICE_HUMIDITY_HISTORY_PRESENTATION_FORMAT_0,
+                UUID_DESCRIPTOR_CHARACTERISTIC_PRESENTATION_FORMAT, LEGATTDB_PERM_READABLE, 7),
+                0x06, 0, BIT16_TO_8(0x2700), 0x01, BIT16_TO_8(0x0001),
+
+        /* Characteristic 'Time' */
+        // <Name>Time</Name>
+        // <Uuid>3000</Uuid>
+        CHARACTERISTIC_UUID16_WRITABLE (HDLC_SENSOR_SERVICE_TIME, HDLC_SENSOR_SERVICE_TIME_VALUE,
+            __UUID_SENSOR_SERVICE_TIME, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_WRITE | LEGATTDB_CHAR_PROP_NOTIFY,
+            LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ, 4),
+            '0',0x00,0x00,0x00,
+
+            /* Descriptor 'Client Characteristic Configuration' */
+            // <Notification>false</Notification>
+            // <Indication>false</Indication>
+            CHAR_DESCRIPTOR_UUID16_WRITABLE (HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION,
+                UUID_DESCRIPTOR_CLIENT_CHARACTERISTIC_CONFIGURATION, LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ | LEGATTDB_PERM_AUTH_WRITABLE, 2),
+                BIT16_TO_8(CCC_NONE),
+
+            /* Descriptor 'Characteristic Presentation Format' */
+            // <PresentationFormat>
+            // <Format>0x08</Format>
+            // <Exponent>0</Exponent>
+            // <Unit>0x2700</Unit>
+            // <NameSpace>0x01</NameSpace>
+            // <Description>0x0001</Description>
+            CHAR_DESCRIPTOR_UUID16 (HDLD_SENSOR_SERVICE_TIME_PRESENTATION_FORMAT_0,
+                UUID_DESCRIPTOR_CHARACTERISTIC_PRESENTATION_FORMAT, LEGATTDB_PERM_READABLE, 7),
+                0x08, 0, BIT16_TO_8(0x2700), 0x01, BIT16_TO_8(0x0001),
+
+        /* Characteristic 'Recording Info' */
+        // <Name>Recording Info</Name>
+        // <Uuid>3001</Uuid>
+        CHARACTERISTIC_UUID16_WRITABLE (HDLC_SENSOR_SERVICE_RECORDING_INFO, HDLC_SENSOR_SERVICE_RECORDING_INFO_VALUE,
+            __UUID_SENSOR_SERVICE_RECORDING_INFO, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_WRITE,
+            LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ, 2),
+            '0',0x00,
+
+            /* Descriptor 'Characteristic Presentation Format' */
+            // <PresentationFormat>
+            // <Format>0x06</Format>
+            // <Exponent>0</Exponent>
+            // <Unit>0x2700</Unit>
+            // <NameSpace>0x01</NameSpace>
+            // <Description>0x0001</Description>
+            CHAR_DESCRIPTOR_UUID16 (HDLD_SENSOR_SERVICE_RECORDING_INFO_PRESENTATION_FORMAT_0,
+                UUID_DESCRIPTOR_CHARACTERISTIC_PRESENTATION_FORMAT, LEGATTDB_PERM_READABLE, 7),
+                0x06, 0, BIT16_TO_8(0x2700), 0x01, BIT16_TO_8(0x0001),
+
+        /* Characteristic 'Blink' */
+        // <Name>Blink</Name>
+        // <Uuid>3002</Uuid>
+        CHARACTERISTIC_UUID16_WRITABLE (HDLC_SENSOR_SERVICE_BLINK, HDLC_SENSOR_SERVICE_BLINK_VALUE,
+            __UUID_SENSOR_SERVICE_BLINK, LEGATTDB_CHAR_PROP_READ | LEGATTDB_CHAR_PROP_WRITE,
+            LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ, 2),
+            '0',0x00,
+
+            /* Descriptor 'Characteristic Presentation Format' */
+            // <PresentationFormat>
+            // <Format>0x06</Format>
+            // <Exponent>0</Exponent>
+            // <Unit>0x2700</Unit>
+            // <NameSpace>0x01</NameSpace>
+            // <Description>0x0001</Description>
+            CHAR_DESCRIPTOR_UUID16 (HDLD_SENSOR_SERVICE_BLINK_PRESENTATION_FORMAT_0,
+                UUID_DESCRIPTOR_CHARACTERISTIC_PRESENTATION_FORMAT, LEGATTDB_PERM_READABLE, 7),
+                0x06, 0, BIT16_TO_8(0x2700), 0x01, BIT16_TO_8(0x0001),
 
     /* Primary Service 'Battery Service' */
     // <Name>Battery Service</Name>
@@ -125,8 +227,6 @@ const UINT8 gatt_database[] = // Define GATT database
             0x00,
 
 };
-// Indication sent, waiting for ack
-UINT8 pes_indication_sent = 0;
 // Length of the GATT database
 const UINT16 gatt_database_len = sizeof(gatt_database);
 
@@ -152,13 +252,6 @@ const BLE_PROFILE_GPIO_CFG pes_gpio_cfg =
 UINT8 pes_uuid_main_service[2] = {0x8E, 0x3D};
 // Timer counter (for the trace)
 UINT32 __timer_count = 0;
-// Indication confirmation callback
-static void __indication_cfm()
-{
-    pes_indication_sent = 0;
-    pes_indication_cfm();
-}
-
 // Timer callback function for pes_reg_timer
 void pes_timeout(UINT32 arg)
 {
@@ -168,10 +261,16 @@ void pes_timeout(UINT32 arg)
         pes_timer_1s();
     }
 }
+
+void pes_timeout_ms(UINT32 arg)
+{
+    pes_timer_ms();
+}
+
 // Registers timer. Should be called from pes_create()
 void pes_reg_timer()
 {
-    bleprofile_regTimerCb(NULL, pes_timeout);
+    bleprofile_regTimerCb(pes_timeout_ms, pes_timeout);
     bleprofile_StartTimer();
 }
 
@@ -201,16 +300,18 @@ void pes_add_bond(UINT8 *bda)
     // Clear persistent generated values in the hostinfo for just bonded peer
 
     // Set the initial value of the client configuration descriptor for value 'Temperature'
-    p_bonded->sensor_service_temperature_client_configuration = CCC_INDICATION;
+    p_bonded->sensor_service_temperature_client_configuration = CCC_NOTIFICATION;
 
     // Set the initial value of the client configuration descriptor for value 'Humidity'
-    p_bonded->sensor_service_humidity_client_configuration = CCC_INDICATION;
+    p_bonded->sensor_service_humidity_client_configuration = CCC_NOTIFICATION;
+
+    // Set the initial value of the client configuration descriptor for value 'Time'
+    p_bonded->sensor_service_time_client_configuration = 0;
 }
 
 // Prepares generated code for connection - writes persistent values from __HOSTINFO to GATT DB
 void __on_connection_up()
 {
-    pes_indication_sent = 0;
     // Find this peer among bonded peers in the p_hostinfo_generated
     if (__find_bonded_peer(pes_remote_addr))
     {
@@ -227,6 +328,12 @@ void __on_connection_up()
         db_pdu.pdu[0] = p_bonded->sensor_service_humidity_client_configuration & 0xff;
         db_pdu.pdu[1] = (p_bonded->sensor_service_humidity_client_configuration >> 8) & 0xff;
         bleprofile_WriteHandle(HDLD_SENSOR_SERVICE_HUMIDITY_CLIENT_CONFIGURATION, &db_pdu);
+
+        // Write the value of the client configuration descriptor for value 'Time'
+        db_pdu.len = 2;
+        db_pdu.pdu[0] = p_bonded->sensor_service_time_client_configuration & 0xff;
+        db_pdu.pdu[1] = (p_bonded->sensor_service_time_client_configuration >> 8) & 0xff;
+        bleprofile_WriteHandle(HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION, &db_pdu);
     }
 }
 
@@ -253,6 +360,81 @@ BOOL __write_handler(UINT16 handle, int len, UINT8 *attrPtr)
             p_bonded->sensor_service_humidity_client_configuration = attrPtr[0] + (attrPtr[1] << 8);
             ble_trace2("handle:%02x val:%04x", handle, p_bonded->sensor_service_humidity_client_configuration);
             res = TRUE;
+        }
+    }
+    if (handle == HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY_VALUE)
+    {
+        if (len > 2)
+        {
+            ble_trace2("bad length:%d handle:%04x", len, handle);
+        }
+        else
+        {
+            //call custom on_write function
+            ble_trace1("write handle:%04x", handle);
+            res = on_write_sensor_service_temperature_history(len, attrPtr);
+        }
+    }
+    if (handle == HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY_VALUE)
+    {
+        if (len > 2)
+        {
+            ble_trace2("bad length:%d handle:%04x", len, handle);
+        }
+        else
+        {
+            //call custom on_write function
+            ble_trace1("write handle:%04x", handle);
+            res = on_write_sensor_service_humidity_history(len, attrPtr);
+        }
+    }
+    if (handle == HDLC_SENSOR_SERVICE_TIME_VALUE)
+    {
+        if (len > 4)
+        {
+            ble_trace2("bad length:%d handle:%04x", len, handle);
+        }
+        else
+        {
+            //call custom on_write function
+            ble_trace1("write handle:%04x", handle);
+            res = on_write_sensor_service_time(len, attrPtr);
+        }
+    }
+    if ((len == 2) && (handle == HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION))
+    {
+        // find this peer among bonded peers in the p_hostinfo_generated
+        if (__find_bonded_peer(pes_remote_addr))
+        {
+            p_bonded->sensor_service_time_client_configuration = attrPtr[0] + (attrPtr[1] << 8);
+            ble_trace2("handle:%02x val:%04x", handle, p_bonded->sensor_service_time_client_configuration);
+            res = TRUE;
+        }
+    }
+    if (handle == HDLC_SENSOR_SERVICE_RECORDING_INFO_VALUE)
+    {
+        if (len > 2)
+        {
+            ble_trace2("bad length:%d handle:%04x", len, handle);
+        }
+        else
+        {
+            //call custom on_write function
+            ble_trace1("write handle:%04x", handle);
+            res = on_write_sensor_service_recording_info(len, attrPtr);
+        }
+    }
+    if (handle == HDLC_SENSOR_SERVICE_BLINK_VALUE)
+    {
+        if (len > 2)
+        {
+            ble_trace2("bad length:%d handle:%04x", len, handle);
+        }
+        else
+        {
+            //call custom on_write function
+            ble_trace1("write handle:%04x", handle);
+            res = on_write_sensor_service_blink(len, attrPtr);
         }
     }
     return res;
@@ -301,7 +483,7 @@ BOOL store_in_db_sensor_service_temperature(UINT8* p_value, UINT8 value_len, BOO
         if (__find_bonded_peer(pes_remote_addr))
         {
             // Exit if notify and indicate are not configured in the Client Configuration Descriptor
-            if (0 == (p_bonded->sensor_service_temperature_client_configuration & (CCC_NOTIFICATION | CCC_INDICATION)))
+            if (0 == (p_bonded->sensor_service_temperature_client_configuration & (CCC_NOTIFICATION)))
             {
                 ble_trace1("don't notify handle:%02x", HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE);
                 return TRUE;
@@ -310,12 +492,6 @@ BOOL store_in_db_sensor_service_temperature(UINT8* p_value, UINT8 value_len, BOO
             if (pes_connection_handle == 0)
             {
                 ble_trace1("not connected handle:%02x", HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE);
-                return FALSE;
-            }
-            // Just return FALSE if we are waiting for confirmation
-            if (pes_indication_sent != 0)
-            {
-                ble_trace1("wait confirmation handle:%02x", HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE);
                 return FALSE;
             }
             //if write is not requested then we did't write the value. Read it
@@ -328,14 +504,6 @@ BOOL store_in_db_sensor_service_temperature(UINT8* p_value, UINT8 value_len, BOO
             {
                 ble_trace2("notify len:%d handle:%02x", db_pdu.len, HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE);
                 bleprofile_sendNotification(HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE, (UINT8 *)db_pdu.pdu, db_pdu.len);
-            }
-            // Indicate property is true. If client has registered for indication,
-            // We can send only one and need to wait for ack.
-            else
-            {
-                pes_indication_sent = 1;
-                ble_trace2("indicate len:%d handle=%02x", db_pdu.len, HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE);
-                bleprofile_sendIndication(HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE, (UINT8 *)db_pdu.pdu, db_pdu.len, __indication_cfm);
             }
         }
     }
@@ -361,7 +529,7 @@ BOOL store_in_db_sensor_service_humidity(UINT8* p_value, UINT8 value_len, BOOL w
         if (__find_bonded_peer(pes_remote_addr))
         {
             // Exit if notify and indicate are not configured in the Client Configuration Descriptor
-            if (0 == (p_bonded->sensor_service_humidity_client_configuration & (CCC_NOTIFICATION | CCC_INDICATION)))
+            if (0 == (p_bonded->sensor_service_humidity_client_configuration & (CCC_NOTIFICATION)))
             {
                 ble_trace1("don't notify handle:%02x", HDLC_SENSOR_SERVICE_HUMIDITY_VALUE);
                 return TRUE;
@@ -370,12 +538,6 @@ BOOL store_in_db_sensor_service_humidity(UINT8* p_value, UINT8 value_len, BOOL w
             if (pes_connection_handle == 0)
             {
                 ble_trace1("not connected handle:%02x", HDLC_SENSOR_SERVICE_HUMIDITY_VALUE);
-                return FALSE;
-            }
-            // Just return FALSE if we are waiting for confirmation
-            if (pes_indication_sent != 0)
-            {
-                ble_trace1("wait confirmation handle:%02x", HDLC_SENSOR_SERVICE_HUMIDITY_VALUE);
                 return FALSE;
             }
             //if write is not requested then we did't write the value. Read it
@@ -389,16 +551,102 @@ BOOL store_in_db_sensor_service_humidity(UINT8* p_value, UINT8 value_len, BOOL w
                 ble_trace2("notify len:%d handle:%02x", db_pdu.len, HDLC_SENSOR_SERVICE_HUMIDITY_VALUE);
                 bleprofile_sendNotification(HDLC_SENSOR_SERVICE_HUMIDITY_VALUE, (UINT8 *)db_pdu.pdu, db_pdu.len);
             }
-            // Indicate property is true. If client has registered for indication,
-            // We can send only one and need to wait for ack.
-            else
+        }
+    }
+    return TRUE;
+}
+
+// It should be called when 'Temperature History' is changed.
+BOOL store_in_db_sensor_service_temperature_history(UINT8* p_value, UINT8 value_len)
+{
+    BLEPROFILE_DB_PDU db_pdu;
+    // Write value to the GATT DB
+    ble_trace2("write len:%d handle:%02x", value_len, HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY_VALUE);
+    memcpy(&db_pdu.pdu[0], p_value, value_len);
+    db_pdu.len = value_len;
+    bleprofile_WriteHandle(HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY_VALUE, &db_pdu);
+    return TRUE;
+}
+
+// It should be called when 'Humidity History' is changed.
+BOOL store_in_db_sensor_service_humidity_history(UINT8* p_value, UINT8 value_len)
+{
+    BLEPROFILE_DB_PDU db_pdu;
+    // Write value to the GATT DB
+    ble_trace2("write len:%d handle:%02x", value_len, HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY_VALUE);
+    memcpy(&db_pdu.pdu[0], p_value, value_len);
+    db_pdu.len = value_len;
+    bleprofile_WriteHandle(HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY_VALUE, &db_pdu);
+    return TRUE;
+}
+
+// It should be called when 'Time' is changed.
+BOOL store_in_db_sensor_service_time(UINT8* p_value, UINT8 value_len, BOOL write, BOOL notify)
+{
+    BLEPROFILE_DB_PDU db_pdu;
+    //if write is requested
+    if (write)
+    {
+        // Write value to the GATT DB
+        ble_trace2("write len:%d handle:%02x", value_len, HDLC_SENSOR_SERVICE_TIME_VALUE);
+        memcpy(&db_pdu.pdu[0], p_value, value_len);
+        db_pdu.len = value_len;
+        bleprofile_WriteHandle(HDLC_SENSOR_SERVICE_TIME_VALUE, &db_pdu);
+    }
+    // If notification is requested
+    if (notify)
+    {
+        if (__find_bonded_peer(pes_remote_addr))
+        {
+            // Exit if notify and indicate are not configured in the Client Configuration Descriptor
+            if (0 == (p_bonded->sensor_service_time_client_configuration & (CCC_NOTIFICATION)))
             {
-                pes_indication_sent = 1;
-                ble_trace2("indicate len:%d handle=%02x", db_pdu.len, HDLC_SENSOR_SERVICE_HUMIDITY_VALUE);
-                bleprofile_sendIndication(HDLC_SENSOR_SERVICE_HUMIDITY_VALUE, (UINT8 *)db_pdu.pdu, db_pdu.len, __indication_cfm);
+                ble_trace1("don't notify handle:%02x", HDLC_SENSOR_SERVICE_TIME_VALUE);
+                return TRUE;
+            }
+            // Just return FALSE if connection is down
+            if (pes_connection_handle == 0)
+            {
+                ble_trace1("not connected handle:%02x", HDLC_SENSOR_SERVICE_TIME_VALUE);
+                return FALSE;
+            }
+            //if write is not requested then we did't write the value. Read it
+            if (!write)
+            {
+                bleprofile_ReadHandle(HDLC_SENSOR_SERVICE_TIME_VALUE, &db_pdu);
+            }
+            // Notify property is true. If client has registered for notification
+            if (p_bonded->sensor_service_time_client_configuration & CCC_NOTIFICATION)
+            {
+                ble_trace2("notify len:%d handle:%02x", db_pdu.len, HDLC_SENSOR_SERVICE_TIME_VALUE);
+                bleprofile_sendNotification(HDLC_SENSOR_SERVICE_TIME_VALUE, (UINT8 *)db_pdu.pdu, db_pdu.len);
             }
         }
     }
+    return TRUE;
+}
+
+// It should be called when 'Recording Info' is changed.
+BOOL store_in_db_sensor_service_recording_info(UINT8* p_value, UINT8 value_len)
+{
+    BLEPROFILE_DB_PDU db_pdu;
+    // Write value to the GATT DB
+    ble_trace2("write len:%d handle:%02x", value_len, HDLC_SENSOR_SERVICE_RECORDING_INFO_VALUE);
+    memcpy(&db_pdu.pdu[0], p_value, value_len);
+    db_pdu.len = value_len;
+    bleprofile_WriteHandle(HDLC_SENSOR_SERVICE_RECORDING_INFO_VALUE, &db_pdu);
+    return TRUE;
+}
+
+// It should be called when 'Blink' is changed.
+BOOL store_in_db_sensor_service_blink(UINT8* p_value, UINT8 value_len)
+{
+    BLEPROFILE_DB_PDU db_pdu;
+    // Write value to the GATT DB
+    ble_trace2("write len:%d handle:%02x", value_len, HDLC_SENSOR_SERVICE_BLINK_VALUE);
+    memcpy(&db_pdu.pdu[0], p_value, value_len);
+    db_pdu.len = value_len;
+    bleprofile_WriteHandle(HDLC_SENSOR_SERVICE_BLINK_VALUE, &db_pdu);
     return TRUE;
 }
 
