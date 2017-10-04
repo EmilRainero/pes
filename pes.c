@@ -176,7 +176,7 @@ void set_led(BOOL value, ulong durationMS)
 
 ulong currentTimeMSTicks = 0;
 
-void pes_timer_ms()
+void pes_timer_ms(UINT32 arg)
 {
 	currentTimeMSTicks++;
 	currentTimeMS += (currentTimeMSTicks % 2 == 1) ? 13 : 12;

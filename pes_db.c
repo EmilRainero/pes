@@ -156,11 +156,11 @@ const UINT8 gatt_database[] = // Define GATT database
             '0',0x00,0x00,0x00,
 
             /* Descriptor 'Client Characteristic Configuration' */
-            // <Notification>false</Notification>
+            // <Notification>true</Notification>
             // <Indication>false</Indication>
             CHAR_DESCRIPTOR_UUID16_WRITABLE (HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION,
                 UUID_DESCRIPTOR_CLIENT_CHARACTERISTIC_CONFIGURATION, LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ | LEGATTDB_PERM_AUTH_WRITABLE, 2),
-                BIT16_TO_8(CCC_NONE),
+                BIT16_TO_8(CCC_NOTIFICATION),
 
             /* Descriptor 'Characteristic Presentation Format' */
             // <PresentationFormat>
@@ -262,15 +262,12 @@ void pes_timeout(UINT32 arg)
     }
 }
 
-void pes_timeout_ms(UINT32 arg)
-{
-    pes_timer_ms();
-}
+extern void pes_timer_ms(UINT32 arg);
 
 // Registers timer. Should be called from pes_create()
 void pes_reg_timer()
 {
-    bleprofile_regTimerCb(pes_timeout_ms, pes_timeout);
+    bleprofile_regTimerCb(pes_timer_ms, pes_timeout);
     bleprofile_StartTimer();
 }
 
@@ -306,7 +303,7 @@ void pes_add_bond(UINT8 *bda)
     p_bonded->sensor_service_humidity_client_configuration = CCC_NOTIFICATION;
 
     // Set the initial value of the client configuration descriptor for value 'Time'
-    p_bonded->sensor_service_time_client_configuration = 0;
+    p_bonded->sensor_service_time_client_configuration = CCC_NOTIFICATION;
 }
 
 // Prepares generated code for connection - writes persistent values from __HOSTINFO to GATT DB
@@ -526,6 +523,7 @@ BOOL store_in_db_sensor_service_humidity(UINT8* p_value, UINT8 value_len, BOOL w
     // If notification is requested
     if (notify)
     {
+    	ble_trace0("write notify");
         if (__find_bonded_peer(pes_remote_addr))
         {
             // Exit if notify and indicate are not configured in the Client Configuration Descriptor
@@ -596,13 +594,16 @@ BOOL store_in_db_sensor_service_time(UINT8* p_value, UINT8 value_len, BOOL write
     // If notification is requested
     if (notify)
     {
+    	ble_trace0("time write notify");
         if (__find_bonded_peer(pes_remote_addr))
         {
+        	ble_trace0("A");
             // Exit if notify and indicate are not configured in the Client Configuration Descriptor
             if (0 == (p_bonded->sensor_service_time_client_configuration & (CCC_NOTIFICATION)))
             {
-                ble_trace1("don't notify handle:%02x", HDLC_SENSOR_SERVICE_TIME_VALUE);
-                return TRUE;
+            	ble_trace1("don't notify handle:%02x", HDLC_SENSOR_SERVICE_TIME_VALUE);
+            	ble_trace1("don't notify: %02x", p_bonded->sensor_service_time_client_configuration);
+				return TRUE;
             }
             // Just return FALSE if connection is down
             if (pes_connection_handle == 0)
@@ -614,6 +615,7 @@ BOOL store_in_db_sensor_service_time(UINT8* p_value, UINT8 value_len, BOOL write
             if (!write)
             {
                 bleprofile_ReadHandle(HDLC_SENSOR_SERVICE_TIME_VALUE, &db_pdu);
+                ble_trace0("no write");
             }
             // Notify property is true. If client has registered for notification
             if (p_bonded->sensor_service_time_client_configuration & CCC_NOTIFICATION)
@@ -621,7 +623,12 @@ BOOL store_in_db_sensor_service_time(UINT8* p_value, UINT8 value_len, BOOL write
                 ble_trace2("notify len:%d handle:%02x", db_pdu.len, HDLC_SENSOR_SERVICE_TIME_VALUE);
                 bleprofile_sendNotification(HDLC_SENSOR_SERVICE_TIME_VALUE, (UINT8 *)db_pdu.pdu, db_pdu.len);
             }
+            ble_trace0("B");
+        } else {
+        	ble_trace0("write notify no bonded peer");
         }
+    } else {
+    	 ble_trace0("write no notify");
     }
     return TRUE;
 }

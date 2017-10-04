@@ -255,6 +255,9 @@
                 <ReliableWrite>false</ReliableWrite>
                 <AuthenticatedWrite>false</AuthenticatedWrite>
             </Permissions>
+            <ClientConfiguration>
+                <Notification>true</Notification>
+            </ClientConfiguration>
             <PresentationFormat>
                 <Format>uint32</Format>
                 <Exponent>0</Exponent>
