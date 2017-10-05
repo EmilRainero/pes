@@ -256,7 +256,8 @@
                 <AuthenticatedWrite>false</AuthenticatedWrite>
             </Permissions>
             <ClientConfiguration>
-                <Notification>true</Notification>
+                <Notification>false</Notification>
+                <Indication>false</Indication>
             </ClientConfiguration>
             <PresentationFormat>
                 <Format>uint32</Format>

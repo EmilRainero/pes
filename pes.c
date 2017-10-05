@@ -161,6 +161,7 @@ ulong currentTimeMS = 0;
 ulong ledTimerMS = 0;
 
 extern void set_led(BOOL value, ulong durationMS);
+extern void pes_timer_ms(UINT32 arg);
 
 void set_led(BOOL value, ulong durationMS)
 {
