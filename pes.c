@@ -187,7 +187,7 @@ void pes_timer_ms(UINT32 arg)
 	}
 }
 
-
+extern void pes_timeout(UINT32 arg);
 
 // Create device
 void pes_create(void)
@@ -277,6 +277,10 @@ void pes_create(void)
     /* add adc <meehan@parc.com> */
     adc_config();
 //    bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 5);
+
+    bleprofile_KillTimer();
+    bleprofile_regTimerCb(pes_timer_ms, pes_timeout);
+    bleprofile_StartTimer();
 }
 
 // Connection up callback function is called on every connection establishment
@@ -294,7 +298,7 @@ void pes_connection_up(void)
                 (pes_remote_addr[1] << 8) + pes_remote_addr[0],
                 pes_connection_handle);
 
-    set_led(TRUE, 2000);
+    //set_led(TRUE, 2000);
 
     // Prepare generated code for connection - write persistent values from __HOSTINFO to GATT DB
     __on_connection_up();
@@ -518,25 +522,6 @@ void pes_timer_1s()
 	//bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 10);
 }
 
-/*
- *
- * 3D8E service � sensors
-                2AE0 � temperature (16 bit unsigned)
-                 2AE1               temperature_history
-record and return time series readings
-                2BCD � humidity (16 bit unsigned)
-                2BCE - humidity history
-set time
-   3000 - set current time - uint32 - seconds since 1970 = unix epoch time
-
-record info � every 5 seconds � shift it
-    3001 - set record info
-
-blink characteristic
-    3010
-
- *
- */
 
 
 // It will be called at the write handler and should return TRUE if any persistent value is changed
@@ -588,9 +573,9 @@ BOOL on_write_sensor_service_recording_info(int len, UINT8 *attrPtr)
 // It will be called at the write handler and should return TRUE if any persistent value is changed
 BOOL on_write_sensor_service_blink(int len, UINT8 *attrPtr)
 {
-    //Todo: do you actions here when value is written by the peer
-    // and return TRUE if any persistent value is changed
-	set_led(TRUE, 500);
+    UINT16 value = *((UINT16 *)attrPtr);
+	ble_trace1("blink %04x", value);
+	set_led(TRUE, value);
     return FALSE;
 }
 

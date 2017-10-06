@@ -267,7 +267,7 @@ void pes_timeout(UINT32 arg)
 // Registers timer. Should be called from pes_create()
 void pes_reg_timer()
 {
-    bleprofile_regTimerCb(pes_timer_ms, pes_timeout);
+    bleprofile_regTimerCb(NULL, pes_timeout);
     bleprofile_StartTimer();
 }
 
