@@ -256,7 +256,7 @@
                 <AuthenticatedWrite>false</AuthenticatedWrite>
             </Permissions>
             <ClientConfiguration>
-                <Notification>false</Notification>
+                <Notification>true</Notification>
                 <Indication>false</Indication>
             </ClientConfiguration>
             <PresentationFormat>

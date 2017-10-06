@@ -156,11 +156,11 @@ const UINT8 gatt_database[] = // Define GATT database
             '0',0x00,0x00,0x00,
 
             /* Descriptor 'Client Characteristic Configuration' */
-            // <Notification>false</Notification>
+            // <Notification>true</Notification>
             // <Indication>false</Indication>
             CHAR_DESCRIPTOR_UUID16_WRITABLE (HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION,
                 UUID_DESCRIPTOR_CLIENT_CHARACTERISTIC_CONFIGURATION, LEGATTDB_PERM_READABLE | LEGATTDB_PERM_WRITE_REQ | LEGATTDB_PERM_AUTH_WRITABLE, 2),
-                BIT16_TO_8(CCC_NONE),
+                BIT16_TO_8(CCC_NOTIFICATION),
 
             /* Descriptor 'Characteristic Presentation Format' */
             // <PresentationFormat>
@@ -252,9 +252,6 @@ const BLE_PROFILE_GPIO_CFG pes_gpio_cfg =
 UINT8 pes_uuid_main_service[2] = {0x8E, 0x3D};
 // Timer counter (for the trace)
 UINT32 __timer_count = 0;
-extern void pes_timer_ms(UINT32 arg);
-
-
 // Timer callback function for pes_reg_timer
 void pes_timeout(UINT32 arg)
 {
@@ -303,7 +300,7 @@ void pes_add_bond(UINT8 *bda)
     p_bonded->sensor_service_humidity_client_configuration = CCC_NOTIFICATION;
 
     // Set the initial value of the client configuration descriptor for value 'Time'
-    p_bonded->sensor_service_time_client_configuration = 0;
+    p_bonded->sensor_service_time_client_configuration = CCC_NOTIFICATION;
 }
 
 // Prepares generated code for connection - writes persistent values from __HOSTINFO to GATT DB
