@@ -12,6 +12,7 @@
         <SPI>false</SPI>
         <Buzzer>false</Buzzer>
         <Battery>true</Battery>
+        <FineTimer>12</FineTimer>
         <OverTheAirUpgrade>
             <Id>16749</Id>
             <MajorVersion>1</MajorVersion>
@@ -90,7 +91,7 @@
         <Description>Vendor Specific Service: Sensors</Description>
         <Characteristic mandatory="false" predefined="false">
             <Name>Temperature</Name>
-            <Uuid>2A6E</Uuid>
+            <Uuid>3000</Uuid>
             <Description>Temperature</Description>
             <DataType/>
             <Size>2</Size>
@@ -124,7 +125,7 @@
         </Characteristic>
         <Characteristic mandatory="false" predefined="false">
             <Name>Humidity</Name>
-            <Uuid>2BCD</Uuid>
+            <Uuid>3001</Uuid>
             <Description>Humidity</Description>
             <DataType/>
             <Size>2</Size>
@@ -157,15 +158,15 @@
             </PresentationFormat>
         </Characteristic>
         <Characteristic mandatory="false" predefined="false">
-            <Name>Temperature History</Name>
-            <Uuid>2AE1</Uuid>
-            <Description>Temperature History</Description>
+            <Name>History</Name>
+            <Uuid>3002</Uuid>
+            <Description>History</Description>
             <DataType/>
-            <Size>2</Size>
+            <Size>30</Size>
             <InitialValue/>
             <Properties>
                 <Read>true</Read>
-                <Notify>false</Notify>
+                <Notify>true</Notify>
                 <Indicate>false</Indicate>
                 <Write>true</Write>
                 <WriteWithoutResponse>false</WriteWithoutResponse>
@@ -183,19 +184,15 @@
                 <ReliableWrite>false</ReliableWrite>
                 <AuthenticatedWrite>false</AuthenticatedWrite>
             </Permissions>
-            <PresentationFormat>
-                <Format>uint16</Format>
-                <Exponent>0</Exponent>
-                <Unit>unitless</Unit>
-                <Description>first</Description>
-                <InitialValue/>
-                <Namespace>bluetooth</Namespace>
-            </PresentationFormat>
+            <ClientConfiguration>
+                <Notification>true</Notification>
+                <Indication>false</Indication>
+            </ClientConfiguration>
         </Characteristic>
         <Characteristic mandatory="false" predefined="false">
-            <Name>Humidity History</Name>
-            <Uuid>2BCE</Uuid>
-            <Description>Humidity History</Description>
+            <Name>Call History</Name>
+            <Uuid>3003</Uuid>
+            <Description>Call History</Description>
             <DataType/>
             <Size>2</Size>
             <InitialValue>0</InitialValue>
@@ -230,7 +227,7 @@
         </Characteristic>
         <Characteristic mandatory="false" predefined="false">
             <Name>Time</Name>
-            <Uuid>3000</Uuid>
+            <Uuid>3004</Uuid>
             <Description>Time</Description>
             <DataType/>
             <Size>4</Size>
@@ -270,7 +267,7 @@
         </Characteristic>
         <Characteristic mandatory="false" predefined="false">
             <Name>Recording Info</Name>
-            <Uuid>3001</Uuid>
+            <Uuid>3005</Uuid>
             <Description>Recording Info</Description>
             <DataType/>
             <Size>2</Size>
@@ -306,7 +303,7 @@
         </Characteristic>
         <Characteristic mandatory="false" predefined="false">
             <Name>Blink</Name>
-            <Uuid>3002</Uuid>
+            <Uuid>3006</Uuid>
             <Description>Blink</Description>
             <DataType/>
             <Size>2</Size>

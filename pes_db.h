@@ -13,82 +13,82 @@
 // UART is enabled in device settings
 #define GATT_DB_ENABLE_UART
 
-#define UUID_SERVICE_GAP                                              0x1800
-#define UUID_CHARACTERISTIC_DEVICE_NAME                               0x2A00
-#define UUID_CHARACTERISTIC_APPEARANCE                                0x2A01
-#define UUID_SERVICE_GATT                                             0x1801
-#define __UUID_SENSOR_SERVICE                                         0x3D8E
-#define __UUID_SENSOR_SERVICE_TEMPERATURE                             0x2A6E
-#define __UUID_SENSOR_SERVICE_HUMIDITY                                0x2BCD
-#define __UUID_SENSOR_SERVICE_TEMPERATURE_HISTORY                     0x2AE1
-#define __UUID_SENSOR_SERVICE_HUMIDITY_HISTORY                        0x2BCE
-#define __UUID_SENSOR_SERVICE_TIME                                    0x3000
-#define __UUID_SENSOR_SERVICE_RECORDING_INFO                          0x3001
-#define __UUID_SENSOR_SERVICE_BLINK                                   0x3002
-#define UUID_SERVICE_BATTERY                                          0x180F
-#define UUID_CHARACTERISTIC_BATTERY_LEVEL                             0x2A19
+#define UUID_SERVICE_GAP                                         0x1800
+#define UUID_CHARACTERISTIC_DEVICE_NAME                          0x2A00
+#define UUID_CHARACTERISTIC_APPEARANCE                           0x2A01
+#define UUID_SERVICE_GATT                                        0x1801
+#define __UUID_SENSOR_SERVICE                                    0x3D8E
+#define __UUID_SENSOR_SERVICE_TEMPERATURE                        0x3000
+#define __UUID_SENSOR_SERVICE_HUMIDITY                           0x3001
+#define __UUID_SENSOR_SERVICE_HISTORY                            0x3002
+#define __UUID_SENSOR_SERVICE_CALL_HISTORY                       0x3003
+#define __UUID_SENSOR_SERVICE_TIME                               0x3004
+#define __UUID_SENSOR_SERVICE_RECORDING_INFO                     0x3005
+#define __UUID_SENSOR_SERVICE_BLINK                              0x3006
+#define UUID_SERVICE_BATTERY                                     0x180F
+#define UUID_CHARACTERISTIC_BATTERY_LEVEL                        0x2A19
 
 // ***** Primary Service 'Generic Access'
-#define HDLS_GENERIC_ACCESS                                           0x0001
+#define HDLS_GENERIC_ACCESS                                      0x0001
 // ----- Characteristic 'Device Name'
-#define HDLC_GENERIC_ACCESS_DEVICE_NAME                               0x0002
-#define HDLC_GENERIC_ACCESS_DEVICE_NAME_VALUE                         0x0003
+#define HDLC_GENERIC_ACCESS_DEVICE_NAME                          0x0002
+#define HDLC_GENERIC_ACCESS_DEVICE_NAME_VALUE                    0x0003
 // ----- Characteristic 'Appearance'
-#define HDLC_GENERIC_ACCESS_APPEARANCE                                0x0004
-#define HDLC_GENERIC_ACCESS_APPEARANCE_VALUE                          0x0005
+#define HDLC_GENERIC_ACCESS_APPEARANCE                           0x0004
+#define HDLC_GENERIC_ACCESS_APPEARANCE_VALUE                     0x0005
 
 // ***** Primary Service 'Generic Attribute'
-#define HDLS_GENERIC_ATTRIBUTE                                        0x0006
+#define HDLS_GENERIC_ATTRIBUTE                                   0x0006
 
 // ***** Primary Service 'Sensor Service'
-#define HDLS_SENSOR_SERVICE                                           0x0100
+#define HDLS_SENSOR_SERVICE                                      0x0100
 // ----- Characteristic 'Temperature'
-#define HDLC_SENSOR_SERVICE_TEMPERATURE                               0x0101
-#define HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE                         0x0102
+#define HDLC_SENSOR_SERVICE_TEMPERATURE                          0x0101
+#define HDLC_SENSOR_SERVICE_TEMPERATURE_VALUE                    0x0102
 // ===== Descriptor 'Client Configuration'
-#define HDLD_SENSOR_SERVICE_TEMPERATURE_CLIENT_CONFIGURATION          0x0103
+#define HDLD_SENSOR_SERVICE_TEMPERATURE_CLIENT_CONFIGURATION     0x0103
 // ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_TEMPERATURE_PRESENTATION_FORMAT_0         0x0104
+#define HDLD_SENSOR_SERVICE_TEMPERATURE_PRESENTATION_FORMAT_0    0x0104
 // ----- Characteristic 'Humidity'
-#define HDLC_SENSOR_SERVICE_HUMIDITY                                  0x0105
-#define HDLC_SENSOR_SERVICE_HUMIDITY_VALUE                            0x0106
+#define HDLC_SENSOR_SERVICE_HUMIDITY                             0x0105
+#define HDLC_SENSOR_SERVICE_HUMIDITY_VALUE                       0x0106
 // ===== Descriptor 'Client Configuration'
-#define HDLD_SENSOR_SERVICE_HUMIDITY_CLIENT_CONFIGURATION             0x0107
+#define HDLD_SENSOR_SERVICE_HUMIDITY_CLIENT_CONFIGURATION        0x0107
 // ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_HUMIDITY_PRESENTATION_FORMAT_0            0x0108
-// ----- Characteristic 'Temperature History'
-#define HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY                       0x0109
-#define HDLC_SENSOR_SERVICE_TEMPERATURE_HISTORY_VALUE                 0x010A
+#define HDLD_SENSOR_SERVICE_HUMIDITY_PRESENTATION_FORMAT_0       0x0108
+// ----- Characteristic 'History'
+#define HDLC_SENSOR_SERVICE_HISTORY                              0x0109
+#define HDLC_SENSOR_SERVICE_HISTORY_VALUE                        0x010A
+// ===== Descriptor 'Client Configuration'
+#define HDLD_SENSOR_SERVICE_HISTORY_CLIENT_CONFIGURATION         0x010B
+// ----- Characteristic 'Call History'
+#define HDLC_SENSOR_SERVICE_CALL_HISTORY                         0x010C
+#define HDLC_SENSOR_SERVICE_CALL_HISTORY_VALUE                   0x010D
 // ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_TEMPERATURE_HISTORY_PRESENTATION_FORMAT_0 0x010B
-// ----- Characteristic 'Humidity History'
-#define HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY                          0x010C
-#define HDLC_SENSOR_SERVICE_HUMIDITY_HISTORY_VALUE                    0x010D
-// ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_HUMIDITY_HISTORY_PRESENTATION_FORMAT_0    0x010E
+#define HDLD_SENSOR_SERVICE_CALL_HISTORY_PRESENTATION_FORMAT_0   0x010E
 // ----- Characteristic 'Time'
-#define HDLC_SENSOR_SERVICE_TIME                                      0x010F
-#define HDLC_SENSOR_SERVICE_TIME_VALUE                                0x0110
+#define HDLC_SENSOR_SERVICE_TIME                                 0x010F
+#define HDLC_SENSOR_SERVICE_TIME_VALUE                           0x0110
 // ===== Descriptor 'Client Configuration'
-#define HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION                 0x0111
+#define HDLD_SENSOR_SERVICE_TIME_CLIENT_CONFIGURATION            0x0111
 // ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_TIME_PRESENTATION_FORMAT_0                0x0112
+#define HDLD_SENSOR_SERVICE_TIME_PRESENTATION_FORMAT_0           0x0112
 // ----- Characteristic 'Recording Info'
-#define HDLC_SENSOR_SERVICE_RECORDING_INFO                            0x0113
-#define HDLC_SENSOR_SERVICE_RECORDING_INFO_VALUE                      0x0114
+#define HDLC_SENSOR_SERVICE_RECORDING_INFO                       0x0113
+#define HDLC_SENSOR_SERVICE_RECORDING_INFO_VALUE                 0x0114
 // ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_RECORDING_INFO_PRESENTATION_FORMAT_0      0x0115
+#define HDLD_SENSOR_SERVICE_RECORDING_INFO_PRESENTATION_FORMAT_0 0x0115
 // ----- Characteristic 'Blink'
-#define HDLC_SENSOR_SERVICE_BLINK                                     0x0116
-#define HDLC_SENSOR_SERVICE_BLINK_VALUE                               0x0117
+#define HDLC_SENSOR_SERVICE_BLINK                                0x0116
+#define HDLC_SENSOR_SERVICE_BLINK_VALUE                          0x0117
 // ===== Descriptor 'Presentation Format'
-#define HDLD_SENSOR_SERVICE_BLINK_PRESENTATION_FORMAT_0               0x0118
+#define HDLD_SENSOR_SERVICE_BLINK_PRESENTATION_FORMAT_0          0x0118
 
 // ***** Primary Service 'Battery Service'
-#define HDLS_BATTERY_SERVICE                                          0x0200
+#define HDLS_BATTERY_SERVICE                                     0x0200
 // ----- Characteristic 'Battery Level'
-#define HDLC_BATTERY_SERVICE_BATTERY_LEVEL                            0x0201
-#define HDLC_BATTERY_SERVICE_BATTERY_LEVEL_VALUE                      0x0202
+#define HDLC_BATTERY_SERVICE_BATTERY_LEVEL                       0x0201
+#define HDLC_BATTERY_SERVICE_BATTERY_LEVEL_VALUE                 0x0202
 
 #pragma pack(1)
 // Host information for NVRAM
@@ -102,6 +102,9 @@ typedef PACKED struct
 
     // Current value of the client configuration descriptor for characteristic 'Humidity'
     UINT16 sensor_service_humidity_client_configuration;
+
+    // Current value of the client configuration descriptor for characteristic 'History'
+    UINT16 sensor_service_history_client_configuration;
 
     // Current value of the client configuration descriptor for characteristic 'Time'
     UINT16 sensor_service_time_client_configuration;
@@ -136,14 +139,17 @@ extern BOOL __write_handler(UINT16 handle, int len, UINT8 *attrPtr);
 
 // ------------------- You have to implement these functions ----------------
 
+// Custom function to be called every fine timer tick
+extern void pes_timer_fine();
+
 // Custom function to be called every 1 s
 extern void pes_timer_1s();
 
 // It will be called at the write handler and should return TRUE if any persistent value is changed
-extern BOOL on_write_sensor_service_temperature_history(int len, UINT8 *attrPtr);
+extern BOOL on_write_sensor_service_history(int len, UINT8 *attrPtr);
 
 // It will be called at the write handler and should return TRUE if any persistent value is changed
-extern BOOL on_write_sensor_service_humidity_history(int len, UINT8 *attrPtr);
+extern BOOL on_write_sensor_service_call_history(int len, UINT8 *attrPtr);
 
 // It will be called at the write handler and should return TRUE if any persistent value is changed
 extern BOOL on_write_sensor_service_time(int len, UINT8 *attrPtr);
@@ -169,11 +175,11 @@ extern BOOL store_in_db_sensor_service_temperature(UINT8* p_value, UINT8 value_l
 // It should be called when 'Humidity' is changed
 extern BOOL store_in_db_sensor_service_humidity(UINT8* p_value, UINT8 value_len, BOOL write, BOOL notify);
 
-// It should be called when 'Temperature History' is changed
-extern BOOL store_in_db_sensor_service_temperature_history(UINT8* p_value, UINT8 value_len);
+// It should be called when 'History' is changed
+extern BOOL store_in_db_sensor_service_history(UINT8* p_value, UINT8 value_len, BOOL write, BOOL notify);
 
-// It should be called when 'Humidity History' is changed
-extern BOOL store_in_db_sensor_service_humidity_history(UINT8* p_value, UINT8 value_len);
+// It should be called when 'Call History' is changed
+extern BOOL store_in_db_sensor_service_call_history(UINT8* p_value, UINT8 value_len);
 
 // It should be called when 'Time' is changed
 extern BOOL store_in_db_sensor_service_time(UINT8* p_value, UINT8 value_len, BOOL write, BOOL notify);

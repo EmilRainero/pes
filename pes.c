@@ -155,7 +155,255 @@ APPLICATION_INIT()
                    pes_create);
 }
 
+/* ************************************************************** */
+
 #define LED_PIN 28
+
+#define TRANSFER_BUFFER_SIZE 30
+#define MAX_BUFFER_SIZE 2048
+//#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+typedef enum {
+    ENCODING_4_2_2,
+    ENCODING_2_2_2
+} ENCODING_TYPE;
+
+typedef struct
+{
+    UINT16 size;
+    UINT16 maxSize;
+    UINT8 *buffer;
+	ENCODING_TYPE encoding;
+} RecordingInfo;
+
+typedef struct
+{
+    UINT16 size;
+    UINT16 offset;
+    UINT16 maxSize;
+    UINT8 *buffer;
+} TransferInfo;
+
+
+extern void setTime(UINT32 time);
+extern void incrementTime();
+extern void initialize();
+extern void printBuffer2(UINT8 *buf, UINT16 len, int spacing, int linebreak);
+extern void mymemcpy(UINT8 *to, UINT8 *from, UINT16 len);
+extern UINT32 GetRandom(UINT32 low, UINT32 high);
+extern void SetRecordingInfo(RecordingInfo *info, UINT8 *buf, UINT16 maxSize, ENCODING_TYPE encoding);
+extern void AddRecordingRecord(RecordingInfo *info, UINT32 time, UINT16 temperature, UINT16 humidity);
+extern UINT16 tempRead();
+extern UINT16 humidityRead();
+extern void readSensors();
+extern BOOL tempSetNextTransferBlock(RecordingInfo *info);
+extern void sprintBuffer2(char *s, UINT8 *buf, UINT16 len, int spacing, int linebreak);
+
+extern UINT32 currentTime;
+extern UINT16 sensorRecordInterval;
+extern UINT32 sensorNextReadTime;
+
+extern RecordingInfo recordings;
+extern TransferInfo transferRecordings;
+extern ENCODING_TYPE encoding;
+
+extern UINT32 temperatureRandomLow;
+extern UINT32 temperatureRandomHigh;
+extern UINT32 humidityRandomLow;
+extern UINT32 humidityRandomHigh;
+
+RecordingInfo recordings;
+TransferInfo transferRecordings;
+
+UINT8 buffer[MAX_BUFFER_SIZE];
+UINT8 transferBuffer[TRANSFER_BUFFER_SIZE];
+
+UINT32 currentTime = 0;
+UINT16 sensorRecordInterval = 30;
+UINT32 sensorNextReadTime;
+
+UINT32 temperatureRandomLow = 10;
+UINT32 temperatureRandomHigh = 20;
+UINT32 humidityRandomLow = 50;
+UINT32 humidityRandomHigh = 90;
+
+
+ENCODING_TYPE encoding = ENCODING_4_2_2;
+
+void mymemcpy(UINT8 *to, UINT8 *from, UINT16 len)
+{
+	UINT16 i;
+	for (i=0; i<len; i++)
+	{
+		*to = *from;
+		from++;
+		to++;
+	}
+}
+
+UINT32 m_w = 521288629;
+UINT32 m_z = 362436069;
+UINT32 GetUint()
+{
+    m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+    m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+    return (m_z << 16) + m_w;
+}
+
+UINT32 GetRandom(UINT32 low, UINT32 high)
+{
+	UINT32 value = GetUint();
+	value = value % (high-low) + low;
+	return value;
+}
+
+void SetRecordingInfo(RecordingInfo *info, UINT8 *buf, UINT16 maxSize, ENCODING_TYPE encoding)
+{
+	info->size = 0;
+	info->maxSize = maxSize;
+	info->buffer = buf;
+	info->encoding = encoding;
+}
+
+
+void AddRecordingRecord_4_2_2(RecordingInfo *info, UINT32 time, UINT16 temperature, UINT16 humidity)
+{
+	UINT16 len = 8;
+
+	if (info->size + len > info->maxSize)
+	{
+		mymemcpy(info->buffer, info->buffer+len, info->size - len);
+		info->size -= len;
+	}
+	mymemcpy(info->buffer + info->size, (UINT8 *) &time, 4);
+	info->size += 4;
+	mymemcpy(info->buffer + info->size, (UINT8 *) &temperature, 2);
+	info->size += 2;
+	mymemcpy(info->buffer + info->size, (UINT8 *) &humidity, 2);
+	info->size += 2;
+}
+
+void AddRecordingRecord_2_2_2(RecordingInfo *info, UINT32 time, UINT16 temperature, UINT16 humidity)
+{
+	UINT16 len = 6;
+
+    if (info->size == 0)
+	{
+		mymemcpy(info->buffer, (UINT8 *) &time, 4);
+		info->size = 4;
+	}
+
+	UINT32 *origTime = (UINT32 *) info->buffer;
+	UINT16 offsetTime = (UINT16) (time - *origTime);
+	//printf("time: %lu  offset: %hu\n", time, offsetTime);
+
+	if (info->size + len > info->maxSize)
+	{
+		//printf("before");
+		//printBuffer2(info->buffer, info->size, 0, 32);
+		mymemcpy(info->buffer, info->buffer+len, info->size - 4 - len);
+		info->size -= len;
+		//printf("after");
+		//printBuffer2(info->buffer, info->size, 0, 32);
+	}
+	mymemcpy(info->buffer + info->size, (UINT8 *) &offsetTime, 2);
+	info->size += 2;
+	mymemcpy(info->buffer + info->size, (UINT8 *) &temperature, 2);
+	info->size += 2;
+	mymemcpy(info->buffer + info->size, (UINT8 *) &humidity, 2);
+	info->size += 2;
+	//printf("after2");
+	//printBuffer2(info->buffer, info->size, 0, 32);
+    //printf("size: %d\n", info->size);
+}
+
+void AddRecordingRecord(RecordingInfo *info, UINT32 time, UINT16 temperature, UINT16 humidity)
+{
+
+	switch (info->encoding)
+	{
+		case ENCODING_4_2_2:
+			AddRecordingRecord_4_2_2(info, time, temperature, humidity);
+			break;
+		case ENCODING_2_2_2:
+			AddRecordingRecord_2_2_2(info, time, temperature, humidity);
+			break;
+		default:
+			break;
+	}
+}
+
+UINT16 tempRead()
+{
+	UINT16 value = GetRandom(temperatureRandomLow, temperatureRandomHigh);
+	return value;
+}
+
+UINT16 humidityRead()
+{
+	UINT16 value = GetRandom(humidityRandomLow, humidityRandomHigh);
+	return value;
+}
+
+void readSensors()
+{
+	if (currentTime < sensorNextReadTime)
+		return;
+
+	UINT16 temperature = tempRead();
+	UINT16 humidity = humidityRead();
+	AddRecordingRecord(&recordings, currentTime, temperature, humidity);
+	sensorNextReadTime = currentTime + sensorRecordInterval;
+}
+
+BOOL SetNextTransferBlock(RecordingInfo *info)
+{
+	UINT16 remaining;
+	UINT8 flag;
+	UINT16 transferLength;
+
+	remaining = info->size - transferRecordings.offset;
+	transferLength = MIN(transferRecordings.maxSize - 3, remaining);
+	remaining -= transferLength;
+
+    flag = ((transferRecordings.offset == 0) << 1 |
+			(remaining == 0)
+		);
+
+    mymemcpy(transferRecordings.buffer, &flag, 1);
+    mymemcpy(transferRecordings.buffer + 1, (UINT8 *) &transferLength, 2);
+	mymemcpy(transferRecordings.buffer + 3,
+		info->buffer + transferRecordings.offset,
+		transferLength);
+
+	transferRecordings.size = transferLength+3;
+	transferRecordings.offset += transferLength;
+	return flag;
+}
+
+
+void initialize()
+{
+	sensorNextReadTime =  currentTime == 0 ? 0 : currentTime + sensorRecordInterval;
+
+	SetRecordingInfo(&recordings, buffer, MAX_BUFFER_SIZE, encoding);
+	transferRecordings.size = 0;
+	transferRecordings.offset = 0;
+	transferRecordings.buffer = transferBuffer;
+	transferRecordings.maxSize = TRANSFER_BUFFER_SIZE;
+}
+
+void setTime(UINT32 time)
+{
+	currentTime = time;
+}
+
+void incrementTime()
+{
+	currentTime++;
+}
+
+/* ************************************************************** */
 
 ulong currentTimeMS = 0;
 ulong ledTimerMS = 0;
@@ -186,8 +434,6 @@ void pes_timer_ms(UINT32 arg)
 		set_led(FALSE, 0);
 	}
 }
-
-extern void pes_timeout(UINT32 arg);
 
 // Create device
 void pes_create(void)
@@ -278,9 +524,11 @@ void pes_create(void)
     adc_config();
 //    bleprofile_LEDBlink((UINT16)1000, (UINT16) 1000, (UINT8) 5);
 
-    bleprofile_KillTimer();
-    bleprofile_regTimerCb(pes_timer_ms, pes_timeout);
-    bleprofile_StartTimer();
+//    bleprofile_KillTimer();
+//    bleprofile_regTimerCb(pes_timer_ms, pes_timeout);
+//    bleprofile_StartTimer();
+
+    initialize();
 }
 
 // Connection up callback function is called on every connection establishment
@@ -439,83 +687,17 @@ UINT16 application_read_adc_voltage_from_gpio(UINT8 gpio_number){
 	return adc_readVoltage(adc_convertGPIOtoADCInput(gpio_number));
 }
 
-//status_t wiced_sense_get_humidity_temp_instantaneous_data(UINT16* humidity, INT16* temperature)
-//{
-//	if(HTS221_StartOneShotMeasurement() == HTS221_OK)
-//	{
-//		if(HTS221_Get_Measurement(humidity, temperature) == HTS221_OK)
-//			return MEMS_SUCCESS;
-//	}
-//
-//	return MEMS_ERROR;
-//}
-
-UINT32 currentTime = 0;
-
-INT16 fakeTemperature = 0;
-INT16 fakeHumidity = 0;
-
-//void wiced_sense_initialize_hts221(void)
-//{
-//	if(HTS221_Activate() == HTS221_OK)
-//		ble_trace0("HTS221_Activate Successful");
-//	else
-//		ble_trace0("HTS221_Activate Failed.");
-//
-//	if(HTS221_Set_Odr(HTS221_ODR_7HZ) == HTS221_OK)
-//		ble_trace0("HTS221_Set_Odr Successful");
-//	else
-//		ble_trace0("HTS221_Set_Odr Failed.");
-//
-//	if(HTS221_Set_AvgHT(HTS221_AVGH_8, HTS221_AVGT_4) == HTS221_OK)
-//		ble_trace0("HTS221_Set_AvgHT Successful");
-//	else
-//		ble_trace0("HTS221_Set_AvgHT failed");
-//
-//	if(HTS221_Set_BduMode(1) == HTS221_OK)
-//		ble_trace0("HTS221_Set_BduMode Successful");
-//	else
-//		ble_trace0("HTS221_Set_BduMode failed");
-//}
-
 
 // It will be called every 1 sec
 void pes_timer_1s()
 {
-
 	ble_trace0("pes_timer_1s()");
 
-    //Todo: do you actions here every 1 second
-	UINT16 value = application_read_adc_voltage_from_gpio(33);
+    UINT16 value = application_read_adc_voltage_from_gpio(33);
 	//ble_trace1("  voltage %04x", value);
 
-	if (currentTime == 0)
-	{
-//		wiced_rtos_init_timer();
-	}
-	currentTime++;
-
-	if (currentTime % 10 == 0)
-	{
-		//(true); // on
-//		gpio_setPinOutput((28) / 16, (28) % 16, (BYTE) 0);
-//		bleprofile_LEDOn();
-	} else {
-//		(false, 0.0); // off
-//		gpio_setPinOutput((28) / 16, (28) % 16, (BYTE) 255);
-//		bleprofile_LEDOff();
-	}
-
-	fakeTemperature++;
-	fakeHumidity++;
-
-	value = (UINT16) fakeTemperature;
-
-	//value = (UINT16)(status == MEMS_SUCCESS) ? 3 : 4;
-	//store_in_db_sensor_service_temperature(application_read_adc_voltage_from_gpio(33), 2, TRUE, TRUE);
-
-//	store_in_db_sensor_service_temperature((UINT8 *)&fakeTemperature, 2, TRUE, TRUE);
-//	store_in_db_sensor_service_humidity((UINT8 *)&fakeHumidity, 2, TRUE, TRUE);
+	incrementTime();
+	readSensors();
 
 	store_in_db_sensor_service_time((UINT8 *)&currentTime, 4, TRUE, TRUE);
 
@@ -536,9 +718,16 @@ BOOL on_write_sensor_service_set_recording_info(int len, UINT8 *attrPtr)
 // It will be called at the write handler and should return TRUE if any persistent value is changed
 BOOL on_write_sensor_service_temperature_history(int len, UINT8 *attrPtr)
 {
-    //Todo: do you actions here when value is written by the peer
-    // and return TRUE if any persistent value is changed
-	ble_trace0("on_write_sensor_service_temperature_history()");
+	UINT8 flag;
+
+    ble_trace0("on_write_sensor_service_temperature_history()");
+
+	transferRecordings.offset = 0;
+	flag = SetNextTransferBlock(&recordings);
+
+	store_in_db_sensor_service_temperature_history((UINT8 *)transferRecordings.buffer,
+			100, TRUE, TRUE);
+
 	return FALSE;
 }
 
@@ -564,10 +753,12 @@ BOOL on_write_sensor_service_time(int len, UINT8 *attrPtr)
 // It will be called at the write handler and should return TRUE if any persistent value is changed
 BOOL on_write_sensor_service_recording_info(int len, UINT8 *attrPtr)
 {
-    //Todo: do you actions here when value is written by the peer
-    // and return TRUE if any persistent value is changed
+	UINT16 value = *((UINT16 *)attrPtr);
 	ble_trace0("on_write_sensor_service_recording_info()");
-    return FALSE;
+	ble_trace1("recording %04x", value);
+	sensorRecordInterval = value;
+	initialize();
+	return FALSE;
 }
 
 // It will be called at the write handler and should return TRUE if any persistent value is changed
@@ -577,5 +768,37 @@ BOOL on_write_sensor_service_blink(int len, UINT8 *attrPtr)
 	ble_trace1("blink %04x", value);
 	set_led(TRUE, value);
     return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_history(int len, UINT8 *attrPtr)
+{
+    //Todo: do you actions here when value is written by the peer
+    // and return TRUE if any persistent value is changed
+    return FALSE;
+}
+
+// It will be called at the write handler and should return TRUE if any persistent value is changed
+BOOL on_write_sensor_service_call_history(int len, UINT8 *attrPtr)
+{
+	set_led(TRUE, 500);
+
+	UINT16 value = *((UINT16 *)attrPtr);
+	if (value != 0)
+	{
+		transferRecordings.offset = 0;
+		//transferRecordings.maxSize = value;
+	}
+	UINT8 flag;
+	flag = SetNextTransferBlock(&recordings);
+	store_in_db_sensor_service_history((UINT8*) transferRecordings.buffer, transferRecordings.size, TRUE, TRUE);
+    return FALSE;
+}
+
+// It will be called every fine timer tick
+void pes_timer_fine()
+{
+    //Todo: do you actions here every fine timer tick
+	pes_timer_ms(0);
 }
 
